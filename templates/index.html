@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mercado Imobiliário — Criciúma 2025</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header>
+  <h1>Mercado Imobiliário — Criciúma, SC</h1>
+  <p>Análise do crescimento de valores no ano de 2025</p>
+  <span class="badge">Dados simulados — 2018 a 2025</span>
+</header>
+
+<div class="container">
+
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="label">Preço médio m² (Apto)</div>
+      <div class="value">{{ kpi.preco_apto }}</div>
+      <div class="change">▲ +12,4% em 2025</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">Preço médio m² (Casa)</div>
+      <div class="value">{{ kpi.preco_casa }}</div>
+      <div class="change">▲ +9,1% em 2025</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">Preço médio m² (Comercial)</div>
+      <div class="value">{{ kpi.preco_comercial }}</div>
+      <div class="change">▲ +7,8% em 2025</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">Valorização acumulada (7 anos)</div>
+      <div class="value">{{ kpi.valorizacao_7anos }}</div>
+      <div class="change">▲ desde 2018</div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+
+    <div class="chart-card">
+      <h2>Evolução do Preço Médio por m²</h2>
+      <div class="subtitle">Valor médio em R$ — mercado geral de Criciúma (2018–2025)</div>
+      <div class="chart-wrapper">
+        <canvas id="chartEvolucao"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h2>Comparativo por Tipo de Imóvel</h2>
+      <div class="subtitle">Preço médio m² — Apartamento, Casa e Comercial (2018–2025)</div>
+      <div class="chart-wrapper">
+        <canvas id="chartTipos"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card" style="grid-column: 1 / -1;">
+      <h2>Valorização por Bairro (2018–2025)</h2>
+      <div class="subtitle">Variação percentual acumulada por bairro de Criciúma</div>
+      <div class="chart-wrapper">
+        <canvas id="chartBairros"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Seção: Preço m² de Apartamentos por Região -->
+  <div class="section-title">
+    <h2>Preço do m² de Apartamentos por Região</h2>
+    <p>Comparativo 2025 — onde os apartamentos são mais valorizados em Criciúma</p>
+  </div>
+
+  <div class="charts-grid">
+
+    <div class="chart-card" style="grid-column: 1 / -1;">
+      <h2>Ranking de Preço m² — Apartamentos por Bairro (2025)</h2>
+      <div class="subtitle">Valor médio do m² em R$ — ordenado do mais ao menos valorizado</div>
+      <div class="chart-wrapper" style="height: 360px;">
+        <canvas id="chartAptosBairro"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h2>Variação Anual por Bairro (2025)</h2>
+      <div class="subtitle">Crescimento percentual do preço m² no último ano</div>
+      <div class="chart-wrapper">
+        <canvas id="chartVariacaoAnual"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h2>Ranking — Tabela de Regiões</h2>
+      <div class="subtitle">Detalhamento por bairro: preço, variação e oferta de unidades</div>
+      <div class="table-wrapper">
+        <table id="tabelaRegioes">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Bairro</th>
+              <th>Preço m²</th>
+              <th>Var. anual</th>
+              <th>Oferta (unid.)</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  Dados simulados para fins de demonstração &mdash; Criciúma, SC &mdash; 2025
+</footer>
+
+<script src="{{ url_for('static', filename='js/charts.js') }}" defer></script>
+</body>
+</html>

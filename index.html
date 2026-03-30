@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Imóveis em Criciúma — Crescimento de Valores</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f1117;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1a1f2e, #2a3150);
+      padding: 32px 40px;
+      border-bottom: 1px solid #2e3650;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    header p {
+      color: #8892b0;
+      margin-top: 6px;
+      font-size: 0.95rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #2563eb22;
+      color: #60a5fa;
+      border: 1px solid #2563eb55;
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 0.75rem;
+      margin-top: 10px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .kpi-card {
+      background: #1a1f2e;
+      border: 1px solid #2e3650;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .kpi-card .label {
+      font-size: 0.8rem;
+      color: #8892b0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .kpi-card .value {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 6px;
+    }
+
+    .kpi-card .change {
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    .change.up { color: #34d399; }
+    .change.down { color: #f87171; }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+      gap: 24px;
+    }
+
+    .chart-card {
+      background: #1a1f2e;
+      border: 1px solid #2e3650;
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .chart-card h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+    }
+
+    .chart-card .subtitle {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      height: 280px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: #1a1f2e;
+      border: 1px solid #2e3650;
+      color: #8892b0;
+      padding: 7px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      background: #2563eb;
+      border-color: #2563eb;
+      color: #fff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 32px;
+      color: #4a5568;
+      font-size: 0.8rem;
+      border-top: 1px solid #1e2536;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Mercado Imobiliário — Criciúma, SC</h1>
+  <p>Acompanhe a evolução dos preços por bairro e tipo de imóvel</p>
+  <span class="badge">Dados simulados — 2018 a 2025</span>
+</header>
+
+<div class="container">
+
+  <!-- KPIs -->
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="label">Preço médio m² (Apto)</div>
+      <div class="value">R$ 5.820</div>
+      <div class="change up">▲ +12,4% em 2024</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">Preço médio m² (Casa)</div>
+      <div class="value">R$ 4.310</div>
+      <div class="change up">▲ +9,1% em 2024</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">Preço médio m² (Comercial)</div>
+      <div class="value">R$ 6.450</div>
+      <div class="change up">▲ +7,8% em 2024</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">Valorização acumulada (7 anos)</div>
+      <div class="value">+94%</div>
+      <div class="change up">▲ desde 2018</div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="filters">
+    <button class="filter-btn active" onclick="setFilter('todos', this)">Todos</button>
+    <button class="filter-btn" onclick="setFilter('apartamento', this)">Apartamentos</button>
+    <button class="filter-btn" onclick="setFilter('casa', this)">Casas</button>
+    <button class="filter-btn" onclick="setFilter('comercial', this)">Comercial</button>
+  </div>
+
+  <!-- Gráficos -->
+  <div class="charts-grid">
+
+    <div class="chart-card">
+      <h2>Evolução do Preço por m² (2018–2025)</h2>
+      <div class="subtitle">Valor médio em R$ por m² — todos os tipos</div>
+      <div class="chart-wrapper">
+        <canvas id="chartEvolucao"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h2>Valorização por Bairro (2025)</h2>
+      <div class="subtitle">Variação percentual acumulada desde 2018</div>
+      <div class="chart-wrapper">
+        <canvas id="chartBairros"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h2>Comparativo de Tipos de Imóvel</h2>
+      <div class="subtitle">Preço médio m² por ano — Apto, Casa e Comercial</div>
+      <div class="chart-wrapper">
+        <canvas id="chartTipos"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h2>Volume de Transações por Trimestre</h2>
+      <div class="subtitle">Número de negociações registradas em Criciúma</div>
+      <div class="chart-wrapper">
+        <canvas id="chartVolume"></canvas>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  Dados simulados para fins de demonstração. Atualizado em março/2026.
+</footer>
+
+<script>
+  const anos = ['2018','2019','2020','2021','2022','2023','2024','2025'];
+
+  const defaults = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { labels: { color: '#94a3b8', font: { size: 12 } } },
+      tooltip: { mode: 'index', intersect: false }
+    },
+    scales: {
+      x: { ticks: { color: '#64748b' }, grid: { color: '#1e2a3a' } },
+      y: { ticks: { color: '#64748b' }, grid: { color: '#1e2a3a' } }
+    }
+  };
+
+  // Chart 1 — Evolução geral
+  new Chart(document.getElementById('chartEvolucao'), {
+    type: 'line',
+    data: {
+      labels: anos,
+      datasets: [{
+        label: 'Preço médio m² (R$)',
+        data: [3000, 3280, 3500, 3950, 4400, 4980, 5600, 5820],
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59,130,246,0.1)',
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: '#3b82f6',
+        pointRadius: 4
+      }]
+    },
+    options: {
+      ...defaults,
+      scales: {
+        ...defaults.scales,
+        y: {
+          ...defaults.scales.y,
+          ticks: {
+            color: '#64748b',
+            callback: v => 'R$ ' + v.toLocaleString('pt-BR')
+          }
+        }
+      }
+    }
+  });
+
+  // Chart 2 — Bairros
+  new Chart(document.getElementById('chartBairros'), {
+    type: 'bar',
+    data: {
+      labels: ['Centro','Próspera','Santa Luzia','Comerciário','Michel','Boa Vista','Pinheirinho'],
+      datasets: [{
+        label: 'Valorização % (2018–2025)',
+        data: [94, 78, 112, 88, 105, 130, 72],
+        backgroundColor: [
+          '#3b82f6','#8b5cf6','#10b981','#f59e0b',
+          '#ef4444','#06b6d4','#84cc16'
+        ],
+        borderRadius: 6
+      }]
+    },
+    options: {
+      ...defaults,
+      plugins: {
+        ...defaults.plugins,
+        legend: { display: false }
+      },
+      scales: {
+        ...defaults.scales,
+        y: {
+          ...defaults.scales.y,
+          ticks: {
+            color: '#64748b',
+            callback: v => v + '%'
+          }
+        }
+      }
+    }
+  });
+
+  // Chart 3 — Tipos
+  new Chart(document.getElementById('chartTipos'), {
+    type: 'line',
+    data: {
+      labels: anos,
+      datasets: [
+        {
+          label: 'Apartamento',
+          data: [3100, 3400, 3650, 4100, 4600, 5200, 5600, 5820],
+          borderColor: '#3b82f6',
+          backgroundColor: 'transparent',
+          tension: 0.4,
+          pointRadius: 3
+        },
+        {
+          label: 'Casa',
+          data: [2300, 2500, 2700, 3000, 3300, 3750, 4100, 4310],
+          borderColor: '#10b981',
+          backgroundColor: 'transparent',
+          tension: 0.4,
+          pointRadius: 3
+        },
+        {
+          label: 'Comercial',
+          data: [3800, 4050, 4200, 4600, 5100, 5700, 6100, 6450],
+          borderColor: '#f59e0b',
+          backgroundColor: 'transparent',
+          tension: 0.4,
+          pointRadius: 3
+        }
+      ]
+    },
+    options: {
+      ...defaults,
+      scales: {
+        ...defaults.scales,
+        y: {
+          ...defaults.scales.y,
+          ticks: {
+            color: '#64748b',
+            callback: v => 'R$ ' + v.toLocaleString('pt-BR')
+          }
+        }
+      }
+    }
+  });
+
+  // Chart 4 — Volume
+  const trimestres = ['T1-22','T2-22','T3-22','T4-22','T1-23','T2-23','T3-23','T4-23','T1-24','T2-24','T3-24','T4-24'];
+  new Chart(document.getElementById('chartVolume'), {
+    type: 'bar',
+    data: {
+      labels: trimestres,
+      datasets: [{
+        label: 'Transações',
+        data: [320, 410, 390, 480, 350, 430, 460, 510, 380, 490, 520, 570],
+        backgroundColor: 'rgba(139,92,246,0.7)',
+        borderColor: '#8b5cf6',
+        borderWidth: 1,
+        borderRadius: 4
+      }]
+    },
+    options: { ...defaults }
+  });
+
+  // Filtro (demonstração visual)
+  function setFilter(tipo, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
