@@ -5,7 +5,8 @@
       "Bash(mkdir -p ~/.local/bin)",
       "Bash(cp /tmp/gh_2.65.0_linux_amd64/bin/gh ~/.local/bin/)",
       "Bash(export PATH=\"$HOME/.local/bin:$PATH\")",
-      "Bash(gh --version)"
+      "Bash(gh --version)",
+      "Bash(gh repo:*)"
     ]
   }
 }
